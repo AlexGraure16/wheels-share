@@ -1,0 +1,38 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.wheelsshare.app"
+    },
+    "jhipsterVersion": "6.6.0",
+    "applicationType": "microservice",
+    "baseName": "WheelsShareApp",
+    "packageName": "com.wheelsshare.app",
+    "packageFolder": "com/wheelsshare/app",
+    "serverPort": "8081",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "NTYzZjc3NDI1ODQ5Y2U4NDlmOWM2YWNmM2YzYWZkZjMxNzZlODY0MDg5MzJjZjEzODgwZThlNmNiODRkNmE3OGYyODRhMjk2MGZjOThhMjFlNGM4NDIzMmM1ZWMwNTI1MGRlZjZjNDE3YTVlMmY1Y2NlODEzMmE1Njc3YTI0NzI=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1578763305121,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
