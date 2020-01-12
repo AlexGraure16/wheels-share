@@ -1,0 +1,38 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.questions.service"
+    },
+    "jhipsterVersion": "6.6.0",
+    "applicationType": "microservice",
+    "baseName": "QuestionsService",
+    "packageName": "com.questions.service",
+    "packageFolder": "com/questions/service",
+    "serverPort": "8082",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "YTU3MTM5N2Q3ZTNmZTQzYzE3ZGFkZTFiMTBmYWQ5ZTA0M2Q4YmE3M2VlMDNlMjAxY2E3YTllMGNkZTI1YjI3NDkwODc0ZmY2NjM2NGZmOTI5MWE4ZDQ4OGZkOGVlNjYzZTVhZTRhNGYyZWE1ODIzNjFjZjBlODY3NTY3OTIxNmE=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1578829423087,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}

@@ -1,0 +1,5 @@
+entity Questions {
+	userEmailAddress String,
+    question String,
+	answer String
+}

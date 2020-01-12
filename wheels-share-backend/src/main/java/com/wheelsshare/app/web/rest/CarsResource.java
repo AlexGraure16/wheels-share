@@ -40,13 +40,13 @@ public class CarsResource {
     }
 
     /**
-     * {@code POST  /cars} : Create a new cars.
+     * {@code POST  /admin/addCar} : Create a new cars.
      *
      * @param cars the cars to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new cars, or with status {@code 400 (Bad Request)} if the cars has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/cars")
+    @PostMapping("/admin/addCar")
     public ResponseEntity<Cars> createCars(@Valid @RequestBody Cars cars) throws URISyntaxException {
         log.debug("REST request to save Cars : {}", cars);
         if (cars.getId() != null) {
@@ -59,7 +59,7 @@ public class CarsResource {
     }
 
     /**
-     * {@code PUT  /cars} : Updates an existing cars.
+     * {@code PUT  /admin/addCar} : Updates an existing cars.
      *
      * @param cars the cars to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cars,
@@ -67,7 +67,7 @@ public class CarsResource {
      * or with status {@code 500 (Internal Server Error)} if the cars couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/cars")
+    @PutMapping("/admin/addCar")
     public ResponseEntity<Cars> updateCars(@Valid @RequestBody Cars cars) throws URISyntaxException {
         log.debug("REST request to update Cars : {}", cars);
         if (cars.getId() == null) {
@@ -105,12 +105,12 @@ public class CarsResource {
     }
 
     /**
-     * {@code DELETE  /cars/:id} : delete the "id" cars.
+     * {@code DELETE  /admin/cars/delete/:id} : delete the "id" cars.
      *
      * @param id the id of the cars to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/cars/{id}")
+    @DeleteMapping("/admin/cars/delete/{id}")
     public ResponseEntity<Void> deleteCars(@PathVariable Long id) {
         log.debug("REST request to delete Cars : {}", id);
         carsRepository.deleteById(id);

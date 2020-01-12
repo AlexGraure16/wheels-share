@@ -1,0 +1,29 @@
+{
+    "name": "Questions",
+    "fields": [
+        {
+            "fieldName": "userEmailAddress",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "question",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "answer",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20200112114532",
+    "entityTableName": "questions",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "QuestionsService",
+    "applications": "*",
+    "microserviceName": "QuestionsService"
+}
