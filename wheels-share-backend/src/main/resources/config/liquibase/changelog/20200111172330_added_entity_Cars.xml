@@ -15,10 +15,7 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="photo" type="longblob">
-                <constraints nullable="false" />
-            </column>
-            <column name="photo_content_type" type="varchar(255)">
+            <column name="photo" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             <column name="air_conditioning" type="boolean">
@@ -80,8 +77,7 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="description" type="string"/>
-            <column name="photo" type="blob"/>
-            <column name="photo_content_type" type="string"/>
+            <column name="photo" type="string"/>
             <column name="air_conditioning" type="boolean"/>
             <column name="radio" type="boolean"/>
             <column name="abs" type="boolean"/>

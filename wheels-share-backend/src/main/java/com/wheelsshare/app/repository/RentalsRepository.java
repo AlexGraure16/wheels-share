@@ -13,10 +13,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface RentalsRepository extends JpaRepository<Rentals, Long> {
-    List<Rentals> findByUserEmailAddressAndOngoing(String userEmailAddress, Boolean ongoing);
+    List<Rentals> findByUserEmailAddressAndOngoingOrderByIdAsc(String userEmailAddress, Boolean ongoing);
 
-    List<Rentals> findByOngoing(Boolean ongoing);
+    List<Rentals> findByOngoingOrderByIdAsc(Boolean ongoing);
 
-    List<Rentals> findByUserEmailAddress(String userEmailAddress);
+    List<Rentals> findByOngoingAndCarIdOrderByIdAsc(Boolean ongoing, Long carId);
+
+    List<Rentals> findByUserEmailAddressOrderByIdAsc(String userEmailAddress);
 
 }

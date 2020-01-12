@@ -28,12 +28,9 @@ public class Cars implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Lob
+    @NotNull
     @Column(name = "photo", nullable = false)
-    private byte[] photo;
-
-    @Column(name = "photo_content_type", nullable = false)
-    private String photoContentType;
+    private String photo;
 
     @NotNull
     @Column(name = "air_conditioning", nullable = false)
@@ -119,30 +116,17 @@ public class Cars implements Serializable {
         this.description = description;
     }
 
-    public byte[] getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public Cars photo(byte[] photo) {
+    public Cars photo(String photo) {
         this.photo = photo;
         return this;
     }
 
-    public void setPhoto(byte[] photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public String getPhotoContentType() {
-        return photoContentType;
-    }
-
-    public Cars photoContentType(String photoContentType) {
-        this.photoContentType = photoContentType;
-        return this;
-    }
-
-    public void setPhotoContentType(String photoContentType) {
-        this.photoContentType = photoContentType;
     }
 
     public Boolean isAirConditioning() {
@@ -325,7 +309,6 @@ public class Cars implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", photo='" + getPhoto() + "'" +
-            ", photoContentType='" + getPhotoContentType() + "'" +
             ", airConditioning='" + isAirConditioning() + "'" +
             ", radio='" + isRadio() + "'" +
             ", abs='" + isAbs() + "'" +

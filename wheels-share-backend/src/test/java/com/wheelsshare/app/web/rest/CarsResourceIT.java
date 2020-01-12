@@ -16,7 +16,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
@@ -33,16 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = WheelsShareApp.class)
 public class CarsResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "BMW";
+    private static final String UPDATED_NAME = "BMW";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final byte[] DEFAULT_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PHOTO = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_PHOTO_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_PHOTO_CONTENT_TYPE = "image/png";
+    private static final String DEFAULT_PHOTO = "https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg";
+    private static final String UPDATED_PHOTO = "https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg";
 
     private static final Boolean DEFAULT_AIR_CONDITIONING = false;
     private static final Boolean UPDATED_AIR_CONDITIONING = true;
@@ -125,7 +122,6 @@ public class CarsResourceIT {
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .photo(DEFAULT_PHOTO)
-            .photoContentType(DEFAULT_PHOTO_CONTENT_TYPE)
             .airConditioning(DEFAULT_AIR_CONDITIONING)
             .radio(DEFAULT_RADIO)
             .abs(DEFAULT_ABS)
@@ -151,7 +147,6 @@ public class CarsResourceIT {
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .photo(UPDATED_PHOTO)
-            .photoContentType(UPDATED_PHOTO_CONTENT_TYPE)
             .airConditioning(UPDATED_AIR_CONDITIONING)
             .radio(UPDATED_RADIO)
             .abs(UPDATED_ABS)
@@ -190,7 +185,6 @@ public class CarsResourceIT {
         assertThat(testCars.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCars.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCars.getPhoto()).isEqualTo(DEFAULT_PHOTO);
-        assertThat(testCars.getPhotoContentType()).isEqualTo(DEFAULT_PHOTO_CONTENT_TYPE);
         assertThat(testCars.isAirConditioning()).isEqualTo(DEFAULT_AIR_CONDITIONING);
         assertThat(testCars.isRadio()).isEqualTo(DEFAULT_RADIO);
         assertThat(testCars.isAbs()).isEqualTo(DEFAULT_ABS);
@@ -490,20 +484,19 @@ public class CarsResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cars.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].photoContentType").value(hasItem(DEFAULT_PHOTO_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(Base64Utils.encodeToString(DEFAULT_PHOTO))))
-            .andExpect(jsonPath("$.[*].airConditioning").value(hasItem(DEFAULT_AIR_CONDITIONING.booleanValue())))
-            .andExpect(jsonPath("$.[*].radio").value(hasItem(DEFAULT_RADIO.booleanValue())))
-            .andExpect(jsonPath("$.[*].abs").value(hasItem(DEFAULT_ABS.booleanValue())))
-            .andExpect(jsonPath("$.[*].electricWindows").value(hasItem(DEFAULT_ELECTRIC_WINDOWS.booleanValue())))
-            .andExpect(jsonPath("$.[*].centralLocking").value(hasItem(DEFAULT_CENTRAL_LOCKING.booleanValue())))
-            .andExpect(jsonPath("$.[*].bigTrunk").value(hasItem(DEFAULT_BIG_TRUNK.booleanValue())))
-            .andExpect(jsonPath("$.[*].fuelEfficiency").value(hasItem(DEFAULT_FUEL_EFFICIENCY.booleanValue())))
-            .andExpect(jsonPath("$.[*].familySize").value(hasItem(DEFAULT_FAMILY_SIZE.booleanValue())))
-            .andExpect(jsonPath("$.[*].automaticGearBox").value(hasItem(DEFAULT_AUTOMATIC_GEAR_BOX.booleanValue())))
+            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO)))
+            .andExpect(jsonPath("$.[*].airConditioning").value(hasItem(DEFAULT_AIR_CONDITIONING)))
+            .andExpect(jsonPath("$.[*].radio").value(hasItem(DEFAULT_RADIO)))
+            .andExpect(jsonPath("$.[*].abs").value(hasItem(DEFAULT_ABS)))
+            .andExpect(jsonPath("$.[*].electricWindows").value(hasItem(DEFAULT_ELECTRIC_WINDOWS)))
+            .andExpect(jsonPath("$.[*].centralLocking").value(hasItem(DEFAULT_CENTRAL_LOCKING)))
+            .andExpect(jsonPath("$.[*].bigTrunk").value(hasItem(DEFAULT_BIG_TRUNK)))
+            .andExpect(jsonPath("$.[*].fuelEfficiency").value(hasItem(DEFAULT_FUEL_EFFICIENCY)))
+            .andExpect(jsonPath("$.[*].familySize").value(hasItem(DEFAULT_FAMILY_SIZE)))
+            .andExpect(jsonPath("$.[*].automaticGearBox").value(hasItem(DEFAULT_AUTOMATIC_GEAR_BOX)))
             .andExpect(jsonPath("$.[*].seatsNumber").value(hasItem(DEFAULT_SEATS_NUMBER)))
             .andExpect(jsonPath("$.[*].fuel").value(hasItem(DEFAULT_FUEL.toString())))
-            .andExpect(jsonPath("$.[*].pricePerDay").value(hasItem(DEFAULT_PRICE_PER_DAY.doubleValue())));
+            .andExpect(jsonPath("$.[*].pricePerDay").value(hasItem(DEFAULT_PRICE_PER_DAY)));
     }
 
     @Test
@@ -519,20 +512,19 @@ public class CarsResourceIT {
             .andExpect(jsonPath("$.id").value(cars.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.photoContentType").value(DEFAULT_PHOTO_CONTENT_TYPE))
-            .andExpect(jsonPath("$.photo").value(Base64Utils.encodeToString(DEFAULT_PHOTO)))
-            .andExpect(jsonPath("$.airConditioning").value(DEFAULT_AIR_CONDITIONING.booleanValue()))
-            .andExpect(jsonPath("$.radio").value(DEFAULT_RADIO.booleanValue()))
-            .andExpect(jsonPath("$.abs").value(DEFAULT_ABS.booleanValue()))
-            .andExpect(jsonPath("$.electricWindows").value(DEFAULT_ELECTRIC_WINDOWS.booleanValue()))
-            .andExpect(jsonPath("$.centralLocking").value(DEFAULT_CENTRAL_LOCKING.booleanValue()))
-            .andExpect(jsonPath("$.bigTrunk").value(DEFAULT_BIG_TRUNK.booleanValue()))
-            .andExpect(jsonPath("$.fuelEfficiency").value(DEFAULT_FUEL_EFFICIENCY.booleanValue()))
-            .andExpect(jsonPath("$.familySize").value(DEFAULT_FAMILY_SIZE.booleanValue()))
-            .andExpect(jsonPath("$.automaticGearBox").value(DEFAULT_AUTOMATIC_GEAR_BOX.booleanValue()))
+            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO))
+            .andExpect(jsonPath("$.airConditioning").value(DEFAULT_AIR_CONDITIONING))
+            .andExpect(jsonPath("$.radio").value(DEFAULT_RADIO))
+            .andExpect(jsonPath("$.abs").value(DEFAULT_ABS))
+            .andExpect(jsonPath("$.electricWindows").value(DEFAULT_ELECTRIC_WINDOWS))
+            .andExpect(jsonPath("$.centralLocking").value(DEFAULT_CENTRAL_LOCKING))
+            .andExpect(jsonPath("$.bigTrunk").value(DEFAULT_BIG_TRUNK))
+            .andExpect(jsonPath("$.fuelEfficiency").value(DEFAULT_FUEL_EFFICIENCY))
+            .andExpect(jsonPath("$.familySize").value(DEFAULT_FAMILY_SIZE))
+            .andExpect(jsonPath("$.automaticGearBox").value(DEFAULT_AUTOMATIC_GEAR_BOX))
             .andExpect(jsonPath("$.seatsNumber").value(DEFAULT_SEATS_NUMBER))
             .andExpect(jsonPath("$.fuel").value(DEFAULT_FUEL.toString()))
-            .andExpect(jsonPath("$.pricePerDay").value(DEFAULT_PRICE_PER_DAY.doubleValue()));
+            .andExpect(jsonPath("$.pricePerDay").value(DEFAULT_PRICE_PER_DAY));
     }
 
     @Test
@@ -559,7 +551,6 @@ public class CarsResourceIT {
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .photo(UPDATED_PHOTO)
-            .photoContentType(UPDATED_PHOTO_CONTENT_TYPE)
             .airConditioning(UPDATED_AIR_CONDITIONING)
             .radio(UPDATED_RADIO)
             .abs(UPDATED_ABS)
@@ -585,7 +576,6 @@ public class CarsResourceIT {
         assertThat(testCars.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCars.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCars.getPhoto()).isEqualTo(UPDATED_PHOTO);
-        assertThat(testCars.getPhotoContentType()).isEqualTo(UPDATED_PHOTO_CONTENT_TYPE);
         assertThat(testCars.isAirConditioning()).isEqualTo(UPDATED_AIR_CONDITIONING);
         assertThat(testCars.isRadio()).isEqualTo(UPDATED_RADIO);
         assertThat(testCars.isAbs()).isEqualTo(UPDATED_ABS);

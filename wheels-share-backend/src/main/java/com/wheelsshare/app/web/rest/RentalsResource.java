@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Transactional
 public class RentalsResource {
 
@@ -100,7 +103,7 @@ public class RentalsResource {
     @GetMapping("/admin/ongoingRentals")
     public List<Rentals> getOngoingRentals() {
         log.debug("REST request to get all ongoing Rentals");
-        return rentalsRepository.findByOngoing(true);
+        return rentalsRepository.findByOngoingOrderByIdAsc(true);
     }
 
     /**
@@ -111,7 +114,7 @@ public class RentalsResource {
     @GetMapping("/currentRentals/{userEmailAddress}")
     public List<Rentals> getCurrentRentals(@PathVariable String userEmailAddress) {
         log.debug("REST request to get all current Rentals");
-        return rentalsRepository.findByUserEmailAddressAndOngoing(userEmailAddress, true);
+        return rentalsRepository.findByUserEmailAddressAndOngoingOrderByIdAsc(userEmailAddress, true);
     }
 
     /**
@@ -122,7 +125,7 @@ public class RentalsResource {
     @GetMapping("/rentalsHistory/{userEmailAddress}")
     public List<Rentals> getRentalsHistory(@PathVariable String userEmailAddress) {
         log.debug("REST request to get rentals history for a specific user");
-        return rentalsRepository.findByUserEmailAddress(userEmailAddress);
+        return rentalsRepository.findByUserEmailAddressOrderByIdAsc(userEmailAddress);
     }
 
     /**
@@ -149,5 +152,37 @@ public class RentalsResource {
         log.debug("REST request to delete Rentals : {}", id);
         rentalsRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * {@code GET  /car/availability/:startDate/:endDate/:carId} : get the availability of a car for specific dates.
+     *
+     * @param startDate the start date.
+     * @param endDate the end date.
+     * @param carId the id of car.
+     * @return the {@link Boolean} with value True if car is availability}.
+     */
+    @GetMapping("/car/availability/{startDate}/{endDate}/{carId}")
+    public Boolean getAvailability(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Long carId) throws ParseException {
+        log.debug("REST request to get availability for a car");
+        final LocalDate startDateFormat = LocalDate.parse(startDate);
+        final LocalDate endDateFormat = LocalDate.parse(endDate);
+
+        for(Rentals rental : rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId)) {
+            final String rentalPeriod = rental.getRentPeriod();
+            final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("-")[0]);
+            final LocalDate ongoingRentalEndDate = LocalDate.parse(rentalPeriod.split("-")[1]);
+            if (startDateFormat.isEqual(ongoingRentalStartDate)
+                || startDateFormat.isEqual(ongoingRentalEndDate)
+                || endDateFormat.isEqual(ongoingRentalStartDate)
+                || endDateFormat.isEqual(ongoingRentalEndDate)) {
+                if (startDateFormat.isAfter(ongoingRentalStartDate) && startDateFormat.isBefore(ongoingRentalEndDate)
+                    || endDateFormat.isAfter(ongoingRentalStartDate) && endDateFormat.isBefore(ongoingRentalEndDate)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

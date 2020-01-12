@@ -1,5 +1,6 @@
 package com.questions.service.web.rest;
 
+import com.questions.service.domain.AnswerObject;
 import com.questions.service.domain.Questions;
 import com.questions.service.repository.QuestionsRepository;
 import com.questions.service.web.rest.errors.BadRequestAlertException;
@@ -61,30 +62,30 @@ public class QuestionsResource {
     }
 
     /**
-     * {@code PUT  /questions} : Updates an existing questions.
+     * {@code POST  /questions/answer} : Updates an existing question.
      *
-     * @param questions the questions to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated questions,
-     * or with status {@code 400 (Bad Request)} if the questions is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the questions couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @param answerObject the answer for question to update.
      */
-    @PutMapping("/questions/answer")
-    public ResponseEntity<Questions> updateQuestions(@RequestBody Questions questions) throws URISyntaxException {
-        log.debug("REST request to update Questions : {}", questions);
-        if (questions.getId() == null) {
+    @PostMapping("/questions/answer")
+    public String updateQuestions(@RequestBody AnswerObject answerObject) {
+        log.debug("REST request to update Questions : {}", answerObject);
+        if (answerObject.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id null");
         }
-        Questions result = questionsRepository.save(questions);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, questions.getId().toString()))
-            .body(result);
+
+        try {
+            questionsRepository.updateQuestion(answerObject.getId(), answerObject.getAnswer());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NOK";
+        }
+
+        return "OK";
     }
 
     /**
      * {@code GET  /questions} : get all the questions.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of questions in body.
      */
     @GetMapping("/questions")
@@ -102,7 +103,7 @@ public class QuestionsResource {
     @GetMapping("/pending-questions")
     public List<Questions> getAllPendingQuestions() {
         log.debug("REST request to get all pending Questions");
-        return questionsRepository.findPendingQuestions();
+        return questionsRepository.findByAnswerIsNullOrderByIdAsc();
     }
 
     /**
