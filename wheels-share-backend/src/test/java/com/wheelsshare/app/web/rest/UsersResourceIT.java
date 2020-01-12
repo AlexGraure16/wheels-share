@@ -32,8 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = WheelsShareApp.class)
 public class UsersResourceIT {
 
-    private static final String DEFAULT_EMAIL_ADDRESS = "AAAAAAAAAA";
-    private static final String UPDATED_EMAIL_ADDRESS = "BBBBBBBBBB";
+    private static final String DEFAULT_EMAIL_ADDRESS = "test@gmail.com";
+    private static final String UPDATED_EMAIL_ADDRESS = "test2@gmail.com";
 
     private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FIRST_NAME = "BBBBBBBBBB";
@@ -145,7 +145,7 @@ public class UsersResourceIT {
         int databaseSizeBeforeCreate = usersRepository.findAll().size();
 
         // Create the Users with an existing ID
-        users.setId(1L);
+        users.setEmailAddress("test@gmail.com");
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUsersMockMvc.perform(post("/api/users")
@@ -238,10 +238,9 @@ public class UsersResourceIT {
         usersRepository.saveAndFlush(users);
 
         // Get all the usersList
-        restUsersMockMvc.perform(get("/api/users?sort=id,desc"))
+        restUsersMockMvc.perform(get("/api/users?sort=emailAddress,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(users.getId().intValue())))
             .andExpect(jsonPath("$.[*].emailAddress").value(hasItem(DEFAULT_EMAIL_ADDRESS)))
             .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME)))
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME)))
@@ -256,10 +255,9 @@ public class UsersResourceIT {
         usersRepository.saveAndFlush(users);
 
         // Get the users
-        restUsersMockMvc.perform(get("/api/users/{id}", users.getId()))
+        restUsersMockMvc.perform(get("/api/users/{emailAddress}", users.getEmailAddress()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(users.getId().intValue()))
             .andExpect(jsonPath("$.emailAddress").value(DEFAULT_EMAIL_ADDRESS))
             .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRST_NAME))
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME))
@@ -271,7 +269,7 @@ public class UsersResourceIT {
     @Transactional
     public void getNonExistingUsers() throws Exception {
         // Get the users
-        restUsersMockMvc.perform(get("/api/users/{id}", Long.MAX_VALUE))
+        restUsersMockMvc.perform(get("/api/users/{emailAddress}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -284,7 +282,7 @@ public class UsersResourceIT {
         int databaseSizeBeforeUpdate = usersRepository.findAll().size();
 
         // Update the users
-        Users updatedUsers = usersRepository.findById(users.getId()).get();
+        Users updatedUsers = usersRepository.findById(users.getEmailAddress()).get();
         // Disconnect from session so that the updates on updatedUsers are not directly saved in db
         em.detach(updatedUsers);
         updatedUsers
@@ -337,7 +335,7 @@ public class UsersResourceIT {
         int databaseSizeBeforeDelete = usersRepository.findAll().size();
 
         // Delete the users
-        restUsersMockMvc.perform(delete("/api/users/{id}", users.getId())
+        restUsersMockMvc.perform(delete("/api/users/{emailAddress}", users.getEmailAddress())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 

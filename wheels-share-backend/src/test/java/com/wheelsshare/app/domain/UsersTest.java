@@ -11,13 +11,13 @@ public class UsersTest {
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Users.class);
         Users users1 = new Users();
-        users1.setId(1L);
+        users1.setEmailAddress("test@gmail.com");
         Users users2 = new Users();
-        users2.setId(users1.getId());
+        users2.setEmailAddress(users1.getEmailAddress());
         assertThat(users1).isEqualTo(users2);
-        users2.setId(2L);
+        users2.setEmailAddress("test2@gmail.com");
         assertThat(users1).isNotEqualTo(users2);
-        users1.setId(null);
+        users1.setEmailAddress(null);
         assertThat(users1).isNotEqualTo(users2);
     }
 }

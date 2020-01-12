@@ -1,5 +1,6 @@
 package com.wheelsshare.app.web.rest;
 
+import com.wheelsshare.app.domain.UserLogInStatus;
 import com.wheelsshare.app.domain.Users;
 import com.wheelsshare.app.repository.UsersRepository;
 import com.wheelsshare.app.web.rest.errors.BadRequestAlertException;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +23,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Transactional
 public class UsersResource {
 
@@ -40,22 +41,26 @@ public class UsersResource {
     }
 
     /**
-     * {@code POST  /users} : Create a new users.
+     * {@code POST  /signUp} : Create a new users.
      *
-     * @param users the users to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new users, or with status {@code 400 (Bad Request)} if the users has already an ID.
+     * @param user the user to create.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/users")
-    public ResponseEntity<Users> createUsers(@Valid @RequestBody Users users) throws URISyntaxException {
-        log.debug("REST request to save Users : {}", users);
-        if (users.getId() != null) {
-            throw new BadRequestAlertException("A new users cannot already have an ID", ENTITY_NAME, "idexists");
+    @PostMapping("/signUp")
+    public String createUsers(@Valid @RequestBody Users user) throws URISyntaxException {
+        log.debug("REST request to save Users : {}", user.getEmailAddress());
+
+        Optional<Users> existingUser = usersRepository.findById(user.getEmailAddress());
+        if (existingUser.isPresent()) {
+            return "NOK";
         }
-        Users result = usersRepository.save(users);
-        return ResponseEntity.created(new URI("/api/users/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+
+        Users result = usersRepository.save(user);
+        if (result != null) {
+            return "OK";
+        }
+
+        return "Error";
     }
 
     /**
@@ -70,12 +75,12 @@ public class UsersResource {
     @PutMapping("/users")
     public ResponseEntity<Users> updateUsers(@Valid @RequestBody Users users) throws URISyntaxException {
         log.debug("REST request to update Users : {}", users);
-        if (users.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        if (users.getEmailAddress() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id null");
         }
         Users result = usersRepository.save(users);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, users.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, users.getEmailAddress()))
             .body(result);
     }
 
@@ -92,28 +97,45 @@ public class UsersResource {
     }
 
     /**
-     * {@code GET  /users/:id} : get the "id" users.
+     * {@code GET  /users/:emailAddress} : get the "emailAddress" users.
      *
-     * @param id the id of the users to retrieve.
+     * @param emailAddress the emailAddress of the users to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the users, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/users/{id}")
-    public ResponseEntity<Users> getUsers(@PathVariable Long id) {
-        log.debug("REST request to get Users : {}", id);
-        Optional<Users> users = usersRepository.findById(id);
+    @GetMapping("/users/{emailAddress}")
+    public ResponseEntity<Users> getUsers(@PathVariable String emailAddress) {
+        log.debug("REST request to get Users : {}", emailAddress);
+        Optional<Users> users = usersRepository.findById(emailAddress);
         return ResponseUtil.wrapOrNotFound(users);
     }
 
     /**
-     * {@code DELETE  /users/:id} : delete the "id" users.
+     * {@code DELETE  /users/:emailAddress} : delete the "emailAddress" users.
      *
-     * @param id the id of the users to delete.
+     * @param emailAddress the id of the users to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUsers(@PathVariable Long id) {
-        log.debug("REST request to delete Users : {}", id);
-        usersRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    @DeleteMapping("/users/{emailAddress}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable String emailAddress) {
+        log.debug("REST request to delete Users : {}", emailAddress);
+        usersRepository.deleteById(emailAddress);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, emailAddress)).build();
+    }
+
+    /**
+     * {@code GET  /:logIn} : log in
+     *
+     * @param emailAddress the emailAddress of the user to log in.
+     * @param password the password of the user to log in.
+     */
+    @GetMapping("/logIn/{emailAddress}/{password}")
+    public UserLogInStatus logIn(@PathVariable("emailAddress") String emailAddress, @PathVariable("password") String password) {
+        log.debug("REST request to log in : {}", emailAddress);
+        List<Users> users = usersRepository.findUserAndLogIn(emailAddress, password);
+        if (!users.isEmpty()) {
+            return new UserLogInStatus(users.get(0), "OK");
+        }
+
+        return new UserLogInStatus("NOK");
     }
 }

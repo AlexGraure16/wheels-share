@@ -1,6 +1,9 @@
 package com.wheelsshare.app.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -14,10 +17,6 @@ public class Users implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
-
     @Column(name = "email_address")
     private String emailAddress;
 
@@ -36,15 +35,6 @@ public class Users implements Serializable {
     @NotNull
     @Column(name = "admin_rights", nullable = false)
     private Boolean adminRights;
-
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -120,7 +110,7 @@ public class Users implements Serializable {
         if (!(o instanceof Users)) {
             return false;
         }
-        return id != null && id.equals(((Users) o).id);
+        return emailAddress != null && emailAddress.equals(((Users) o).emailAddress);
     }
 
     @Override
@@ -131,8 +121,7 @@ public class Users implements Serializable {
     @Override
     public String toString() {
         return "Users{" +
-            "id=" + getId() +
-            ", emailAddress='" + getEmailAddress() + "'" +
+            "emailAddress='" + getEmailAddress() + "'" +
             ", firstName='" + getFirstName() + "'" +
             ", lastName='" + getLastName() + "'" +
             ", password='" + getPassword() + "'" +
