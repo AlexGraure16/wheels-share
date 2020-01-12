@@ -5,11 +5,11 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * A Rents.
+ * A Rentals.
  */
 @Entity
-@Table(name = "rents")
-public class Rents implements Serializable {
+@Table(name = "rentals")
+public class Rentals implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class Rents implements Serializable {
         return carId;
     }
 
-    public Rents carId(Long carId) {
+    public Rentals carId(Long carId) {
         this.carId = carId;
         return this;
     }
@@ -64,7 +64,7 @@ public class Rents implements Serializable {
         return userEmailAddress;
     }
 
-    public Rents userEmailAddress(String userEmailAddress) {
+    public Rentals userEmailAddress(String userEmailAddress) {
         this.userEmailAddress = userEmailAddress;
         return this;
     }
@@ -77,7 +77,7 @@ public class Rents implements Serializable {
         return rentPeriod;
     }
 
-    public Rents rentPeriod(String rentPeriod) {
+    public Rentals rentPeriod(String rentPeriod) {
         this.rentPeriod = rentPeriod;
         return this;
     }
@@ -90,7 +90,7 @@ public class Rents implements Serializable {
         return price;
     }
 
-    public Rents price(Double price) {
+    public Rentals price(Double price) {
         this.price = price;
         return this;
     }
@@ -103,7 +103,7 @@ public class Rents implements Serializable {
         return ongoing;
     }
 
-    public Rents ongoing(Boolean ongoing) {
+    public Rentals ongoing(Boolean ongoing) {
         this.ongoing = ongoing;
         return this;
     }
@@ -118,10 +118,10 @@ public class Rents implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Rents)) {
+        if (!(o instanceof Rentals)) {
             return false;
         }
-        return id != null && id.equals(((Rents) o).id);
+        return id != null && id.equals(((Rentals) o).id);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class Rents implements Serializable {
 
     @Override
     public String toString() {
-        return "Rents{" +
+        return "Rentals{" +
             "id=" + getId() +
             ", carId=" + getCarId() +
             ", userEmailAddress='" + getUserEmailAddress() + "'" +

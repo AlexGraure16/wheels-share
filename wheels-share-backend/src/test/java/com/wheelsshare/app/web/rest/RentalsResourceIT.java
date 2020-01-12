@@ -1,8 +1,8 @@
 package com.wheelsshare.app.web.rest;
 
 import com.wheelsshare.app.WheelsShareApp;
-import com.wheelsshare.app.domain.Rents;
-import com.wheelsshare.app.repository.RentsRepository;
+import com.wheelsshare.app.domain.Rentals;
+import com.wheelsshare.app.repository.RentalsRepository;
 import com.wheelsshare.app.web.rest.errors.ExceptionTranslator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@link RentsResource} REST controller.
+ * Integration tests for the {@link RentalsResource} REST controller.
  */
 @SpringBootTest(classes = WheelsShareApp.class)
-public class RentsResourceIT {
+public class RentalsResourceIT {
 
     private static final Long DEFAULT_CAR_ID = 1L;
     private static final Long UPDATED_CAR_ID = 2L;
@@ -48,7 +48,7 @@ public class RentsResourceIT {
     private static final Boolean UPDATED_ONGOING = true;
 
     @Autowired
-    private RentsRepository rentsRepository;
+    private RentalsRepository rentalsRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -65,15 +65,15 @@ public class RentsResourceIT {
     @Autowired
     private Validator validator;
 
-    private MockMvc restRentsMockMvc;
+    private MockMvc restRentalsMockMvc;
 
-    private Rents rents;
+    private Rentals rentals;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RentsResource rentsResource = new RentsResource(rentsRepository);
-        this.restRentsMockMvc = MockMvcBuilders.standaloneSetup(rentsResource)
+        final RentalsResource rentalsResource = new RentalsResource(rentalsRepository);
+        this.restRentalsMockMvc = MockMvcBuilders.standaloneSetup(rentalsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -87,14 +87,14 @@ public class RentsResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Rents createEntity(EntityManager em) {
-        Rents rents = new Rents()
+    public static Rentals createEntity(EntityManager em) {
+        Rentals rentals = new Rentals()
             .carId(DEFAULT_CAR_ID)
             .userEmailAddress(DEFAULT_USER_EMAIL_ADDRESS)
             .rentPeriod(DEFAULT_RENT_PERIOD)
             .price(DEFAULT_PRICE)
             .ongoing(DEFAULT_ONGOING);
-        return rents;
+        return rentals;
     }
     /**
      * Create an updated entity for this test.
@@ -102,164 +102,164 @@ public class RentsResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Rents createUpdatedEntity(EntityManager em) {
-        Rents rents = new Rents()
+    public static Rentals createUpdatedEntity(EntityManager em) {
+        Rentals rentals = new Rentals()
             .carId(UPDATED_CAR_ID)
             .userEmailAddress(UPDATED_USER_EMAIL_ADDRESS)
             .rentPeriod(UPDATED_RENT_PERIOD)
             .price(UPDATED_PRICE)
             .ongoing(UPDATED_ONGOING);
-        return rents;
+        return rentals;
     }
 
     @BeforeEach
     public void initTest() {
-        rents = createEntity(em);
+        rentals = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void createRents() throws Exception {
-        int databaseSizeBeforeCreate = rentsRepository.findAll().size();
+    public void createRentals() throws Exception {
+        int databaseSizeBeforeCreate = rentalsRepository.findAll().size();
 
-        // Create the Rents
-        restRentsMockMvc.perform(post("/api/rents")
+        // Create the Rentals
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isCreated());
 
-        // Validate the Rents in the database
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeCreate + 1);
-        Rents testRents = rentsList.get(rentsList.size() - 1);
-        assertThat(testRents.getCarId()).isEqualTo(DEFAULT_CAR_ID);
-        assertThat(testRents.getUserEmailAddress()).isEqualTo(DEFAULT_USER_EMAIL_ADDRESS);
-        assertThat(testRents.getRentPeriod()).isEqualTo(DEFAULT_RENT_PERIOD);
-        assertThat(testRents.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testRents.isOngoing()).isEqualTo(DEFAULT_ONGOING);
+        // Validate the Rentals in the database
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeCreate + 1);
+        Rentals testRentals = rentalsList.get(rentalsList.size() - 1);
+        assertThat(testRentals.getCarId()).isEqualTo(DEFAULT_CAR_ID);
+        assertThat(testRentals.getUserEmailAddress()).isEqualTo(DEFAULT_USER_EMAIL_ADDRESS);
+        assertThat(testRentals.getRentPeriod()).isEqualTo(DEFAULT_RENT_PERIOD);
+        assertThat(testRentals.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testRentals.isOngoing()).isEqualTo(DEFAULT_ONGOING);
     }
 
     @Test
     @Transactional
-    public void createRentsWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = rentsRepository.findAll().size();
+    public void createRentalsWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = rentalsRepository.findAll().size();
 
-        // Create the Rents with an existing ID
-        rents.setId(1L);
+        // Create the Rentals with an existing ID
+        rentals.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Rents in the database
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeCreate);
+        // Validate the Rentals in the database
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeCreate);
     }
 
 
     @Test
     @Transactional
     public void checkCarIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = rentsRepository.findAll().size();
+        int databaseSizeBeforeTest = rentalsRepository.findAll().size();
         // set the field null
-        rents.setCarId(null);
+        rentals.setCarId(null);
 
-        // Create the Rents, which fails.
+        // Create the Rentals, which fails.
 
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeTest);
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkUserEmailAddressIsRequired() throws Exception {
-        int databaseSizeBeforeTest = rentsRepository.findAll().size();
+        int databaseSizeBeforeTest = rentalsRepository.findAll().size();
         // set the field null
-        rents.setUserEmailAddress(null);
+        rentals.setUserEmailAddress(null);
 
-        // Create the Rents, which fails.
+        // Create the Rentals, which fails.
 
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeTest);
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkRentPeriodIsRequired() throws Exception {
-        int databaseSizeBeforeTest = rentsRepository.findAll().size();
+        int databaseSizeBeforeTest = rentalsRepository.findAll().size();
         // set the field null
-        rents.setRentPeriod(null);
+        rentals.setRentPeriod(null);
 
-        // Create the Rents, which fails.
+        // Create the Rentals, which fails.
 
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeTest);
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkPriceIsRequired() throws Exception {
-        int databaseSizeBeforeTest = rentsRepository.findAll().size();
+        int databaseSizeBeforeTest = rentalsRepository.findAll().size();
         // set the field null
-        rents.setPrice(null);
+        rentals.setPrice(null);
 
-        // Create the Rents, which fails.
+        // Create the Rentals, which fails.
 
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeTest);
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkOngoingIsRequired() throws Exception {
-        int databaseSizeBeforeTest = rentsRepository.findAll().size();
+        int databaseSizeBeforeTest = rentalsRepository.findAll().size();
         // set the field null
-        rents.setOngoing(null);
+        rentals.setOngoing(null);
 
-        // Create the Rents, which fails.
+        // Create the Rentals, which fails.
 
-        restRentsMockMvc.perform(post("/api/rents")
+        restRentalsMockMvc.perform(post("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeTest);
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
-    public void getAllRents() throws Exception {
+    public void getAllRentals() throws Exception {
         // Initialize the database
-        rentsRepository.saveAndFlush(rents);
+        rentalsRepository.saveAndFlush(rentals);
 
-        // Get all the rentsList
-        restRentsMockMvc.perform(get("/api/rents?sort=id,desc"))
+        // Get all the rentalsList
+        restRentalsMockMvc.perform(get("/api/rentals?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(rents.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(rentals.getId().intValue())))
             .andExpect(jsonPath("$.[*].carId").value(hasItem(DEFAULT_CAR_ID.intValue())))
             .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
             .andExpect(jsonPath("$.[*].rentPeriod").value(hasItem(DEFAULT_RENT_PERIOD)))
@@ -269,15 +269,15 @@ public class RentsResourceIT {
 
     @Test
     @Transactional
-    public void getRents() throws Exception {
+    public void getRentals() throws Exception {
         // Initialize the database
-        rentsRepository.saveAndFlush(rents);
+        rentalsRepository.saveAndFlush(rentals);
 
-        // Get the rents
-        restRentsMockMvc.perform(get("/api/rents/{id}", rents.getId()))
+        // Get the rentals
+        restRentalsMockMvc.perform(get("/api/rentals/{id}", rentals.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(rents.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(rentals.getId().intValue()))
             .andExpect(jsonPath("$.carId").value(DEFAULT_CAR_ID.intValue()))
             .andExpect(jsonPath("$.userEmailAddress").value(DEFAULT_USER_EMAIL_ADDRESS))
             .andExpect(jsonPath("$.rentPeriod").value(DEFAULT_RENT_PERIOD))
@@ -287,80 +287,80 @@ public class RentsResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingRents() throws Exception {
-        // Get the rents
-        restRentsMockMvc.perform(get("/api/rents/{id}", Long.MAX_VALUE))
+    public void getNonExistingRentals() throws Exception {
+        // Get the rentals
+        restRentalsMockMvc.perform(get("/api/rentals/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateRents() throws Exception {
+    public void updateRentals() throws Exception {
         // Initialize the database
-        rentsRepository.saveAndFlush(rents);
+        rentalsRepository.saveAndFlush(rentals);
 
-        int databaseSizeBeforeUpdate = rentsRepository.findAll().size();
+        int databaseSizeBeforeUpdate = rentalsRepository.findAll().size();
 
-        // Update the rents
-        Rents updatedRents = rentsRepository.findById(rents.getId()).get();
-        // Disconnect from session so that the updates on updatedRents are not directly saved in db
-        em.detach(updatedRents);
-        updatedRents
+        // Update the rentals
+        Rentals updatedRentals = rentalsRepository.findById(rentals.getId()).get();
+        // Disconnect from session so that the updates on updatedRentals are not directly saved in db
+        em.detach(updatedRentals);
+        updatedRentals
             .carId(UPDATED_CAR_ID)
             .userEmailAddress(UPDATED_USER_EMAIL_ADDRESS)
             .rentPeriod(UPDATED_RENT_PERIOD)
             .price(UPDATED_PRICE)
             .ongoing(UPDATED_ONGOING);
 
-        restRentsMockMvc.perform(put("/api/rents")
+        restRentalsMockMvc.perform(put("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedRents)))
+            .content(TestUtil.convertObjectToJsonBytes(updatedRentals)))
             .andExpect(status().isOk());
 
-        // Validate the Rents in the database
-        List<Rents> rentsList = rentsRepository.findAll();
-        assertThat(rentsList).hasSize(databaseSizeBeforeUpdate);
-        Rents testRents = rentsList.get(rentsList.size() - 1);
-        assertThat(testRents.getCarId()).isEqualTo(UPDATED_CAR_ID);
-        assertThat(testRents.getUserEmailAddress()).isEqualTo(UPDATED_USER_EMAIL_ADDRESS);
-        assertThat(testRents.getRentPeriod()).isEqualTo(UPDATED_RENT_PERIOD);
-        assertThat(testRents.getPrice()).isEqualTo(UPDATED_PRICE);
-        assertThat(testRents.isOngoing()).isEqualTo(UPDATED_ONGOING);
+        // Validate the Rentals in the database
+        List<Rentals> rentalsList = rentalsRepository.findAll();
+        assertThat(rentalsList).hasSize(databaseSizeBeforeUpdate);
+        Rentals testRentals = rentalsList.get(rentalsList.size() - 1);
+        assertThat(testRentals.getCarId()).isEqualTo(UPDATED_CAR_ID);
+        assertThat(testRentals.getUserEmailAddress()).isEqualTo(UPDATED_USER_EMAIL_ADDRESS);
+        assertThat(testRentals.getRentPeriod()).isEqualTo(UPDATED_RENT_PERIOD);
+        assertThat(testRentals.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testRentals.isOngoing()).isEqualTo(UPDATED_ONGOING);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingRents() throws Exception {
-        int databaseSizeBeforeUpdate = rentsRepository.findAll().size();
+    public void updateNonExistingRentals() throws Exception {
+        int databaseSizeBeforeUpdate = rentalsRepository.findAll().size();
 
-        // Create the Rents
+        // Create the Rentals
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restRentsMockMvc.perform(put("/api/rents")
+        restRentalsMockMvc.perform(put("/api/rents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rents)))
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Rents in the database
-        List<Rents> rentsList = rentsRepository.findAll();
+        // Validate the Rentals in the database
+        List<Rentals> rentsList = rentalsRepository.findAll();
         assertThat(rentsList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
-    public void deleteRents() throws Exception {
+    public void deleteRentals() throws Exception {
         // Initialize the database
-        rentsRepository.saveAndFlush(rents);
+        rentalsRepository.saveAndFlush(rentals);
 
-        int databaseSizeBeforeDelete = rentsRepository.findAll().size();
+        int databaseSizeBeforeDelete = rentalsRepository.findAll().size();
 
         // Delete the rents
-        restRentsMockMvc.perform(delete("/api/rents/{id}", rents.getId())
+        restRentalsMockMvc.perform(delete("/api/rents/{id}", rentals.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Rents> rentsList = rentsRepository.findAll();
+        List<Rentals> rentsList = rentalsRepository.findAll();
         assertThat(rentsList).hasSize(databaseSizeBeforeDelete - 1);
     }
 }

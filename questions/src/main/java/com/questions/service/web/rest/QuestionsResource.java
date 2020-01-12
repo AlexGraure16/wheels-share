@@ -42,17 +42,17 @@ public class QuestionsResource {
     }
 
     /**
-     * {@code POST  /questions} : Create a new questions.
+     * {@code POST  /questions/add} : Create a new questions.
      *
      * @param questions the questions to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new questions, or with status {@code 400 (Bad Request)} if the questions has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/questions")
+    @PostMapping("/questions/add")
     public ResponseEntity<Questions> createQuestions(@RequestBody Questions questions) throws URISyntaxException {
         log.debug("REST request to save Questions : {}", questions);
         if (questions.getId() != null) {
-            throw new BadRequestAlertException("A new questions cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new questions cannot already have an ID", ENTITY_NAME, "id exists");
         }
         Questions result = questionsRepository.save(questions);
         return ResponseEntity.created(new URI("/api/questions/" + result.getId()))
@@ -69,11 +69,11 @@ public class QuestionsResource {
      * or with status {@code 500 (Internal Server Error)} if the questions couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/questions")
+    @PutMapping("/questions/answer")
     public ResponseEntity<Questions> updateQuestions(@RequestBody Questions questions) throws URISyntaxException {
         log.debug("REST request to update Questions : {}", questions);
         if (questions.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id null");
         }
         Questions result = questionsRepository.save(questions);
         return ResponseEntity.ok()
@@ -91,6 +91,18 @@ public class QuestionsResource {
     public List<Questions> getAllQuestions() {
         log.debug("REST request to get all Questions");
         return questionsRepository.findAll();
+    }
+
+    /**
+     * {@code GET  /pending-questions} : get all the pending questions.
+     *
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of questions in body.
+     */
+    @GetMapping("/pending-questions")
+    public List<Questions> getAllPendingQuestions() {
+        log.debug("REST request to get all pending Questions");
+        return questionsRepository.findPendingQuestions();
     }
 
     /**

@@ -1,5 +1,5 @@
 {
-    "name": "Rents",
+    "name": "Rentals",
     "fields": [
         {
             "fieldName": "carId",
@@ -39,7 +39,7 @@
     ],
     "relationships": [],
     "changelogDate": "20200111172331",
-    "entityTableName": "rents",
+    "entityTableName": "rentals",
     "dto": "no",
     "pagination": "no",
     "service": "no",
