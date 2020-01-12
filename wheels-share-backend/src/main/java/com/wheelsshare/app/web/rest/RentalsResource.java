@@ -100,7 +100,29 @@ public class RentalsResource {
     @GetMapping("/admin/ongoingRentals")
     public List<Rentals> getOngoingRentals() {
         log.debug("REST request to get all ongoing Rentals");
-        return rentalsRepository.findAll();
+        return rentalsRepository.findByOngoing(true);
+    }
+
+    /**
+     * {@code GET  /currentRentals/:userEmailAddress} : get all current rentals.
+     *s
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of current rentals in body.
+     */
+    @GetMapping("/currentRentals/{userEmailAddress}")
+    public List<Rentals> getCurrentRentals(@PathVariable String userEmailAddress) {
+        log.debug("REST request to get all current Rentals");
+        return rentalsRepository.findByUserEmailAddressAndOngoing(userEmailAddress, true);
+    }
+
+    /**
+     * {@code GET  /rentalsHistory/:userEmailAddress} : get all rentals for a specific user.
+     *s
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of rentals for a specific user in body.
+     */
+    @GetMapping("/rentalsHistory/{userEmailAddress}")
+    public List<Rentals> getRentalsHistory(@PathVariable String userEmailAddress) {
+        log.debug("REST request to get rentals history for a specific user");
+        return rentalsRepository.findByUserEmailAddress(userEmailAddress);
     }
 
     /**

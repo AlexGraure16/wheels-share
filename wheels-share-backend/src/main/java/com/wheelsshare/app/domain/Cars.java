@@ -28,7 +28,6 @@ public class Cars implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-
     @Lob
     @Column(name = "photo", nullable = false)
     private byte[] photo;
