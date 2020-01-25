@@ -18,6 +18,8 @@ public interface QuestionsRepository extends JpaRepository<Questions, Long> {
 
     List<Questions> findByAnswerIsNullOrderByIdAsc();
 
+    List<Questions> findByAnswerIsNotNullOrderByIdAsc();
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE Questions q SET q.answer = :answer WHERE q.id = :questionId")

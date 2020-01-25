@@ -1,27 +1,5 @@
 id;name;description;photo;air_conditioning;radio;abs;electric_windows;central_locking;big_trunk;fuel_efficiency;family_size;automatic_gear_box;seats_number;fuel;price_per_day
-1;Skoda Octavia;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;FALSE;FALSE;FALSE;TRUE;FALSE;FALSE;FALSE;4;GAS;54
-2;Skoda Kodiaq;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;TRUE;FALSE;FALSE;TRUE;TRUE;TRUE;TRUE;5;DIESEL;65
-3;Volkswagen Passat;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;FALSE;FALSE;TRUE;FALSE;TRUE;FALSE;FALSE;TRUE;5;DIESEL;32
-4;Volkswagen Arteon;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;TRUE;FALSE;FALSE;FALSE;FALSE;TRUE;4;GAS;25
-5;Volkswagen Jetta;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;FALSE;FALSE;TRUE;TRUE;TRUE;FALSE;TRUE;TRUE;4;DIESEL;56
-6;Volkswagen Golf;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;TRUE;FALSE;FALSE;FALSE;FALSE;TRUE;FALSE;FALSE;4;GAS;32
-7;BMW S3;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;TRUE;FALSE;FALSE;TRUE;FALSE;TRUE;4;GAS;47
-8;BMW S5;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;TRUE;FALSE;TRUE;FALSE;FALSE;FALSE;5;DIESEL;43
-9;Dacia Logan;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;TRUE;TRUE;TRUE;TRUE;FALSE;FALSE;4;GAS;99
-10;Renault Clio;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;FALSE;FALSE;TRUE;FALSE;FALSE;TRUE;FALSE;5;GAS;44
-11;Renault Captur;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;TRUE;FALSE;TRUE;TRUE;FALSE;FALSE;FALSE;2;GAS;88
-12;Audi A3;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;TRUE;FALSE;FALSE;FALSE;TRUE;TRUE;FALSE;TRUE;5;DIESEL;41
-13;Audi A4;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;TRUE;TRUE;TRUE;FALSE;FALSE;FALSE;2;GAS;79
-14;Audi A5;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;FALSE;TRUE;TRUE;FALSE;FALSE;TRUE;FALSE;FALSE;4;DIESEL;92
-15;Audi A6;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;TRUE;FALSE;FALSE;FALSE;TRUE;FALSE;TRUE;5;DIESEL;57
-16;Audi A7;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;TRUE;FALSE;FALSE;TRUE;TRUE;FALSE;TRUE;2;GAS;52
-17;Audi A8;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;FALSE;FALSE;TRUE;TRUE;TRUE;FALSE;TRUE;4;GAS;52
-18;Mercedes S-Class;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;FALSE;FALSE;TRUE;TRUE;TRUE;TRUE;5;DIESEL;77
-19;Mercedes C-Class;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;TRUE;TRUE;FALSE;TRUE;TRUE;TRUE;FALSE;2;DIESEL;56
-20;Mercedes E-Class;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;TRUE;TRUE;TRUE;TRUE;FALSE;FALSE;TRUE;TRUE;5;DIESEL;69
-21;Mercedes GLS;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;FALSE;FALSE;TRUE;FALSE;FALSE;FALSE;FALSE;4;DIESEL;91
-22;Opel Astra;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;FALSE;TRUE;TRUE;TRUE;TRUE;FALSE;FALSE;TRUE;5;DIESEL;67
-23;Opel Corsa;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;TRUE;FALSE;TRUE;FALSE;TRUE;TRUE;TRUE;4;GAS;30
-24;Ford Focus;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;FALSE;TRUE;TRUE;FALSE;TRUE;FALSE;TRUE;FALSE;TRUE;4;GAS;96
-25;Ford Fiesta;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;FALSE;TRUE;FALSE;TRUE;FALSE;TRUE;FALSE;FALSE;5;GAS;48
-26;Tesla Model S;descriere;https://ro.wikipedia.org/wiki/BMW_X5#/media/Fi%C8%99ier:2019_BMW_X5_M50d_Automatic_3.0.jpg;TRUE;TRUE;TRUE;TRUE;TRUE;TRUE;TRUE;TRUE;TRUE;6;ELECTRIC;100
+1201;peugeot 307;Intr-o stare perfecta <3;https://blog.autovit.ro/wp-content/uploads/2014/03/Peugeot-307-exterior-fata.jpg;TRUE;TRUE;FALSE;TRUE;TRUE;FALSE;TRUE;FALSE;FALSE;5;DIESEL;20
+1251;Alfa Romeo;Mito;https://upload.wikimedia.org/wikipedia/commons/2/23/Alfa_Romeo_MiTo_1.3_JTDm.JPG;TRUE;TRUE;FALSE;FALSE;FALSE;FALSE;FALSE;FALSE;FALSE;4;GAS;30
+1252;Ford Focus;2017;https://st.motortrend.ca/uploads/sites/10/2017/05/2017-ford-focus-titanium-sedan-angular-front.png;FALSE;FALSE;FALSE;TRUE;FALSE;FALSE;FALSE;FALSE;TRUE;0;GAS;25
+1255;Ford Fiesta;descriere;https://www.ford.com/cmslibs/content/dam/vdm_ford/live/en_us/ford/nameplate/fiesta/2019/collections/exterior_gallery/3-2/19_FRD_FIE_44403_32_garage.jpg/_jcr_content/renditions/cq5dam.web.768.768.jpeg;TRUE;TRUE;TRUE;TRUE;TRUE;FALSE;FALSE;FALSE;FALSE;5;DIESEL;30

@@ -97,13 +97,23 @@ public class QuestionsResource {
     /**
      * {@code GET  /pending-questions} : get all the pending questions.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of questions in body.
      */
     @GetMapping("/pending-questions")
     public List<Questions> getAllPendingQuestions() {
         log.debug("REST request to get all pending Questions");
         return questionsRepository.findByAnswerIsNullOrderByIdAsc();
+    }
+
+    /**
+     * {@code GET  /answered-questions} : get all the answered questions.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of answered questions in body.
+     */
+    @GetMapping("/answered-questions")
+    public List<Questions> getAnsweredQuestions() {
+        log.debug("REST request to get all answered Questions");
+        return questionsRepository.findByAnswerIsNotNullOrderByIdAsc();
     }
 
     /**

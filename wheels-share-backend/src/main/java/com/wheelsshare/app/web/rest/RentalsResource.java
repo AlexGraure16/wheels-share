@@ -172,14 +172,10 @@ public class RentalsResource {
             final String rentalPeriod = rental.getRentPeriod();
             final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("-")[0]);
             final LocalDate ongoingRentalEndDate = LocalDate.parse(rentalPeriod.split("-")[1]);
-            if (startDateFormat.isEqual(ongoingRentalStartDate)
-                || startDateFormat.isEqual(ongoingRentalEndDate)
-                || endDateFormat.isEqual(ongoingRentalStartDate)
-                || endDateFormat.isEqual(ongoingRentalEndDate)) {
-                if (startDateFormat.isAfter(ongoingRentalStartDate) && startDateFormat.isBefore(ongoingRentalEndDate)
-                    || endDateFormat.isAfter(ongoingRentalStartDate) && endDateFormat.isBefore(ongoingRentalEndDate)) {
-                    return false;
-                }
+
+            if (startDateFormat.isBefore(ongoingRentalStartDate) || startDateFormat.isAfter(ongoingRentalEndDate)
+                && endDateFormat.isBefore(ongoingRentalStartDate) || endDateFormat.isAfter(ongoingRentalEndDate)) {
+                return false;
             }
         }
 
