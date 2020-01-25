@@ -55,7 +55,7 @@ public class RentalsResource {
             throw new BadRequestAlertException("A new rentals cannot already have an ID", ENTITY_NAME, "id exists");
         }
 
-        String[] periodTokens = rentals.getRentPeriod().split("-");
+        String[] periodTokens = rentals.getRentPeriod().split("/");
         String startDate = periodTokens[0];
         String endDate = periodTokens[1];
         if (getAvailability(startDate, endDate, rentals.getCarId())) {
@@ -170,16 +170,19 @@ public class RentalsResource {
      */
     public Boolean getAvailability(String startDate, String endDate, Long carId) throws ParseException {
         log.debug("REST request to get availability for a car");
-        final LocalDate startDateFormat = LocalDate.parse(startDate);
-        final LocalDate endDateFormat = LocalDate.parse(endDate);
+        final LocalDate newStartDate = LocalDate.parse(startDate);
+        final LocalDate newEndDate = LocalDate.parse(endDate);
 
         for(Rentals rental : rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId)) {
             final String rentalPeriod = rental.getRentPeriod();
-            final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("-")[0]);
-            final LocalDate ongoingRentalEndDate = LocalDate.parse(rentalPeriod.split("-")[1]);
+            final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("/")[0]);
+            final LocalDate ongoingRentalEndDate = LocalDate.parse(rentalPeriod.split("/")[1]);
 
-            if (startDateFormat.isBefore(ongoingRentalStartDate) || startDateFormat.isAfter(ongoingRentalEndDate)
-                && endDateFormat.isBefore(ongoingRentalStartDate) || endDateFormat.isAfter(ongoingRentalEndDate)) {
+            if (newStartDate.isAfter(ongoingRentalStartDate) && newStartDate.isBefore(ongoingRentalEndDate)
+                || newEndDate.isAfter(ongoingRentalStartDate) && newEndDate.isBefore(ongoingRentalEndDate)
+                || newStartDate.isBefore(ongoingRentalStartDate) && newEndDate.isAfter(ongoingRentalEndDate)
+                || newStartDate.isEqual(ongoingRentalStartDate) || newEndDate.isEqual(ongoingRentalEndDate)
+                || newStartDate.isEqual(ongoingRentalEndDate) || newEndDate.isEqual(ongoingRentalStartDate)) {
                 return false;
             }
         }
