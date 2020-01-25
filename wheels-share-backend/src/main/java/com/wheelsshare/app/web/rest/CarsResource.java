@@ -51,7 +51,7 @@ public class CarsResource {
     public ResponseEntity<Cars> createCars(@Valid @RequestBody Cars cars) throws URISyntaxException {
         log.debug("REST request to save Cars : {}", cars);
         if (cars.getId() != null) {
-            throw new BadRequestAlertException("A new cars cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new cars cannot already have an ID", ENTITY_NAME, "id exists");
         }
         Cars result = carsRepository.save(cars);
         return ResponseEntity.created(new URI("/api/cars/" + result.getId()))

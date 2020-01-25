@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -50,15 +49,22 @@ public class RentalsResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/rent")
-    public ResponseEntity<Rentals> createRentals(@Valid @RequestBody Rentals rentals) throws URISyntaxException {
+    public Boolean createRentals(@Valid @RequestBody Rentals rentals) throws URISyntaxException, ParseException {
         log.debug("REST request to save Rentals : {}", rentals);
         if (rentals.getId() != null) {
-            throw new BadRequestAlertException("A new rentals cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new rentals cannot already have an ID", ENTITY_NAME, "id exists");
         }
-        Rentals result = rentalsRepository.save(rentals);
-        return ResponseEntity.created(new URI("/api/rentals/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+
+        String[] periodTokens = rentals.getRentPeriod().split("-");
+        String startDate = periodTokens[0];
+        String endDate = periodTokens[1];
+        if (getAvailability(startDate, endDate, rentals.getCarId())) {
+            rentals.setOngoing(true);
+            rentalsRepository.save(rentals);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -162,8 +168,7 @@ public class RentalsResource {
      * @param carId the id of car.
      * @return the {@link Boolean} with value True if car is availability}.
      */
-    @GetMapping("/car/availability/{startDate}/{endDate}/{carId}")
-    public Boolean getAvailability(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Long carId) throws ParseException {
+    public Boolean getAvailability(String startDate, String endDate, Long carId) throws ParseException {
         log.debug("REST request to get availability for a car");
         final LocalDate startDateFormat = LocalDate.parse(startDate);
         final LocalDate endDateFormat = LocalDate.parse(endDate);
