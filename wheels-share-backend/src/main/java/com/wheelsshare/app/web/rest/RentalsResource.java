@@ -109,7 +109,8 @@ public class RentalsResource {
     @GetMapping("/admin/ongoingRentals")
     public List<Rentals> getOngoingRentals() {
         log.debug("REST request to get all ongoing Rentals");
-        return rentalsRepository.findByOngoingOrderByIdAsc(true);
+        List<Rentals> ongoingRentals = rentalsRepository.findByOngoingOrderByIdAsc(true);
+        return ongoingRentals;
     }
 
     /**
@@ -120,7 +121,8 @@ public class RentalsResource {
     @GetMapping("/currentRentals/{userEmailAddress}")
     public List<Rentals> getCurrentRentals(@PathVariable String userEmailAddress) {
         log.debug("REST request to get all current Rentals");
-        return rentalsRepository.findByUserEmailAddressAndOngoingOrderByIdAsc(userEmailAddress, true);
+        List<Rentals> currentRentals = rentalsRepository.findByUserEmailAddressAndOngoingOrderByIdAsc(userEmailAddress, true);
+        return currentRentals;
     }
 
     /**
@@ -161,7 +163,7 @@ public class RentalsResource {
     }
 
     /**
-     * {@code GET  /car/availability/:startDate/:endDate/:carId} : get the availability of a car for specific dates.
+     * get the availability of a car for specific dates.
      *
      * @param startDate the start date.
      * @param endDate the end date.
@@ -173,7 +175,8 @@ public class RentalsResource {
         final LocalDate newStartDate = LocalDate.parse(startDate);
         final LocalDate newEndDate = LocalDate.parse(endDate);
 
-        for(Rentals rental : rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId)) {
+        List<Rentals> ongoingRentals = rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId);
+        for(Rentals rental : ongoingRentals) {
             final String rentalPeriod = rental.getRentPeriod();
             final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("/")[0]);
             final LocalDate ongoingRentalEndDate = LocalDate.parse(rentalPeriod.split("/")[1]);

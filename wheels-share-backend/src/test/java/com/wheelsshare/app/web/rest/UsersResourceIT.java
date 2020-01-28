@@ -32,8 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = WheelsShareApp.class)
 public class UsersResourceIT {
 
-    private static final String DEFAULT_EMAIL_ADDRESS = "test@gmail.com";
-    private static final String UPDATED_EMAIL_ADDRESS = "test2@gmail.com";
+    private static final String DEFAULT_EMAIL_ADDRESS = "test@gmail";
+    private static final String UPDATED_EMAIL_ADDRESS = "test2@gmail";
 
     private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FIRST_NAME = "BBBBBBBBBB";
@@ -123,10 +123,10 @@ public class UsersResourceIT {
         int databaseSizeBeforeCreate = usersRepository.findAll().size();
 
         // Create the Users
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
-            .andExpect(status().isCreated());
+            .andExpect(content().string("\"OK\""));
 
         // Validate the Users in the database
         List<Users> usersList = usersRepository.findAll();
@@ -142,16 +142,19 @@ public class UsersResourceIT {
     @Test
     @Transactional
     public void createUsersWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = usersRepository.findAll().size();
-
         // Create the Users with an existing ID
-        users.setEmailAddress("test@gmail.com");
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
-            .andExpect(status().isBadRequest());
+            .andExpect(content().string("\"OK\""));
+
+        int databaseSizeBeforeCreate = usersRepository.findAll().size();
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restUsersMockMvc.perform(post("/api/signUp")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(users)))
+            .andExpect(content().string("\"NOK\""));
 
         // Validate the Users in the database
         List<Users> usersList = usersRepository.findAll();
@@ -168,7 +171,7 @@ public class UsersResourceIT {
 
         // Create the Users, which fails.
 
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
             .andExpect(status().isBadRequest());
@@ -186,7 +189,7 @@ public class UsersResourceIT {
 
         // Create the Users, which fails.
 
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
             .andExpect(status().isBadRequest());
@@ -204,7 +207,7 @@ public class UsersResourceIT {
 
         // Create the Users, which fails.
 
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
             .andExpect(status().isBadRequest());
@@ -222,7 +225,7 @@ public class UsersResourceIT {
 
         // Create the Users, which fails.
 
-        restUsersMockMvc.perform(post("/api/users")
+        restUsersMockMvc.perform(post("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
             .andExpect(status().isBadRequest());
@@ -286,13 +289,12 @@ public class UsersResourceIT {
         // Disconnect from session so that the updates on updatedUsers are not directly saved in db
         em.detach(updatedUsers);
         updatedUsers
-            .emailAddress(UPDATED_EMAIL_ADDRESS)
             .firstName(UPDATED_FIRST_NAME)
             .lastName(UPDATED_LAST_NAME)
             .password(UPDATED_PASSWORD)
             .adminRights(UPDATED_ADMIN_RIGHTS);
 
-        restUsersMockMvc.perform(put("/api/users")
+        restUsersMockMvc.perform(put("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedUsers)))
             .andExpect(status().isOk());
@@ -301,7 +303,6 @@ public class UsersResourceIT {
         List<Users> usersList = usersRepository.findAll();
         assertThat(usersList).hasSize(databaseSizeBeforeUpdate);
         Users testUsers = usersList.get(usersList.size() - 1);
-        assertThat(testUsers.getEmailAddress()).isEqualTo(UPDATED_EMAIL_ADDRESS);
         assertThat(testUsers.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
         assertThat(testUsers.getLastName()).isEqualTo(UPDATED_LAST_NAME);
         assertThat(testUsers.getPassword()).isEqualTo(UPDATED_PASSWORD);
@@ -314,9 +315,9 @@ public class UsersResourceIT {
         int databaseSizeBeforeUpdate = usersRepository.findAll().size();
 
         // Create the Users
-
+        users.emailAddress(null);
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restUsersMockMvc.perform(put("/api/users")
+        restUsersMockMvc.perform(put("/api/signUp")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(users)))
             .andExpect(status().isBadRequest());

@@ -38,8 +38,8 @@ public class RentalsResourceIT {
     private static final String DEFAULT_USER_EMAIL_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_USER_EMAIL_ADDRESS = "BBBBBBBBBB";
 
-    private static final String DEFAULT_RENT_PERIOD = "AAAAAAAAAA";
-    private static final String UPDATED_RENT_PERIOD = "BBBBBBBBBB";
+    private static final String DEFAULT_RENT_PERIOD = "2020-01-20/2020-02-03";
+    private static final String UPDATED_RENT_PERIOD = "2020-01-15/2020-01-17";
 
     private static final Double DEFAULT_PRICE = 1D;
     private static final Double UPDATED_PRICE = 2D;
@@ -123,10 +123,10 @@ public class RentalsResourceIT {
         int databaseSizeBeforeCreate = rentalsRepository.findAll().size();
 
         // Create the Rentals
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
-            .andExpect(status().isCreated());
+            .andExpect(content().string("true"));
 
         // Validate the Rentals in the database
         List<Rentals> rentalsList = rentalsRepository.findAll();
@@ -136,7 +136,25 @@ public class RentalsResourceIT {
         assertThat(testRentals.getUserEmailAddress()).isEqualTo(DEFAULT_USER_EMAIL_ADDRESS);
         assertThat(testRentals.getRentPeriod()).isEqualTo(DEFAULT_RENT_PERIOD);
         assertThat(testRentals.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testRentals.isOngoing()).isEqualTo(DEFAULT_ONGOING);
+        assertThat(testRentals.isOngoing()).isEqualTo(true);
+    }
+
+    @Test
+    @Transactional
+    public void createSameRental() throws Exception {
+        int databaseSizeBeforeCreate = rentalsRepository.findAll().size();
+
+        // Create the Rentals
+        restRentalsMockMvc.perform(post("/api/rent")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
+            .andExpect(content().string("true"));
+
+        // Create the Rentals
+        restRentalsMockMvc.perform(post("/api/rent")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(rentals)))
+            .andExpect(content().string("false"));
     }
 
     @Test
@@ -148,7 +166,7 @@ public class RentalsResourceIT {
         rentals.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -168,7 +186,7 @@ public class RentalsResourceIT {
 
         // Create the Rentals, which fails.
 
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -186,7 +204,7 @@ public class RentalsResourceIT {
 
         // Create the Rentals, which fails.
 
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -204,7 +222,7 @@ public class RentalsResourceIT {
 
         // Create the Rentals, which fails.
 
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -222,7 +240,7 @@ public class RentalsResourceIT {
 
         // Create the Rentals, which fails.
 
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -240,7 +258,7 @@ public class RentalsResourceIT {
 
         // Create the Rentals, which fails.
 
-        restRentalsMockMvc.perform(post("/api/rentals")
+        restRentalsMockMvc.perform(post("/api/rent")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -263,8 +281,57 @@ public class RentalsResourceIT {
             .andExpect(jsonPath("$.[*].carId").value(hasItem(DEFAULT_CAR_ID.intValue())))
             .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
             .andExpect(jsonPath("$.[*].rentPeriod").value(hasItem(DEFAULT_RENT_PERIOD)))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
-            .andExpect(jsonPath("$.[*].ongoing").value(hasItem(DEFAULT_ONGOING.booleanValue())));
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+            .andExpect(jsonPath("$.[*].ongoing").value(hasItem(DEFAULT_ONGOING)));
+    }
+
+    @Test
+    @Transactional
+    public void getOngoingRentals() throws Exception {
+        // Initialize the database
+        rentals.setId(1L);
+        rentals.ongoing(true);
+        rentalsRepository.saveAndFlush(rentals);
+
+        // Get all the rentalsList
+        restRentalsMockMvc.perform(get("/api/admin/ongoingRentals"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].ongoing").value(hasItem(UPDATED_ONGOING)));
+    }
+
+    @Test
+    @Transactional
+    public void getCurrentRentals() throws Exception {
+        // Initialize the database
+        rentals.setId(1L);
+        rentals.ongoing(true);
+        rentalsRepository.saveAndFlush(rentals);
+
+        // Get all the rentalsList
+        restRentalsMockMvc.perform(get("/api/currentRentals/{userEmailAddress}", rentals.getUserEmailAddress()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
+            .andExpect(jsonPath("$.[*].ongoing").value(hasItem(UPDATED_ONGOING)));
+    }
+
+    @Test
+    @Transactional
+    public void getRentalsHistory() throws Exception {
+        // Initialize the database
+        rentalsRepository.saveAndFlush(rentals);
+
+        // Get all the rentalsList
+        restRentalsMockMvc.perform(get("/api/rentalsHistory/{userEmailAddress}", rentals.getUserEmailAddress()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(rentals.getId().intValue())))
+            .andExpect(jsonPath("$.[*].carId").value(hasItem(DEFAULT_CAR_ID.intValue())))
+            .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
+            .andExpect(jsonPath("$.[*].rentPeriod").value(hasItem(DEFAULT_RENT_PERIOD)))
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+            .andExpect(jsonPath("$.[*].ongoing").value(hasItem(DEFAULT_ONGOING)));
     }
 
     @Test
@@ -281,8 +348,8 @@ public class RentalsResourceIT {
             .andExpect(jsonPath("$.carId").value(DEFAULT_CAR_ID.intValue()))
             .andExpect(jsonPath("$.userEmailAddress").value(DEFAULT_USER_EMAIL_ADDRESS))
             .andExpect(jsonPath("$.rentPeriod").value(DEFAULT_RENT_PERIOD))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
-            .andExpect(jsonPath("$.ongoing").value(DEFAULT_ONGOING.booleanValue()));
+            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
+            .andExpect(jsonPath("$.ongoing").value(DEFAULT_ONGOING));
     }
 
     @Test
@@ -336,7 +403,7 @@ public class RentalsResourceIT {
         // Create the Rentals
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restRentalsMockMvc.perform(put("/api/rents")
+        restRentalsMockMvc.perform(put("/api/rentals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rentals)))
             .andExpect(status().isBadRequest());
@@ -355,7 +422,7 @@ public class RentalsResourceIT {
         int databaseSizeBeforeDelete = rentalsRepository.findAll().size();
 
         // Delete the rents
-        restRentalsMockMvc.perform(delete("/api/rents/{id}", rentals.getId())
+        restRentalsMockMvc.perform(delete("/api/rentals/{id}", rentals.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 

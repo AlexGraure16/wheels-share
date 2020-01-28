@@ -173,7 +173,7 @@ public class CarsResourceIT {
         int databaseSizeBeforeCreate = carsRepository.findAll().size();
 
         // Create the Cars
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isCreated());
@@ -208,7 +208,7 @@ public class CarsResourceIT {
         cars.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -228,7 +228,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -246,7 +246,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -264,7 +264,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -282,7 +282,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -300,7 +300,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -318,7 +318,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -336,7 +336,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -354,7 +354,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -372,7 +372,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -390,7 +390,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -408,7 +408,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -426,7 +426,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -444,7 +444,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -462,7 +462,7 @@ public class CarsResourceIT {
 
         // Create the Cars, which fails.
 
-        restCarsMockMvc.perform(post("/api/cars")
+        restCarsMockMvc.perform(post("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -564,7 +564,7 @@ public class CarsResourceIT {
             .fuel(UPDATED_FUEL)
             .pricePerDay(UPDATED_PRICE_PER_DAY);
 
-        restCarsMockMvc.perform(put("/api/cars")
+        restCarsMockMvc.perform(put("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedCars)))
             .andExpect(status().isOk());
@@ -598,7 +598,7 @@ public class CarsResourceIT {
         // Create the Cars
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCarsMockMvc.perform(put("/api/cars")
+        restCarsMockMvc.perform(put("/api/admin/addCar")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cars)))
             .andExpect(status().isBadRequest());
@@ -617,7 +617,7 @@ public class CarsResourceIT {
         int databaseSizeBeforeDelete = carsRepository.findAll().size();
 
         // Delete the cars
-        restCarsMockMvc.perform(delete("/api/cars/{id}", cars.getId())
+        restCarsMockMvc.perform(delete("/api/admin/cars/delete/{id}", cars.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 

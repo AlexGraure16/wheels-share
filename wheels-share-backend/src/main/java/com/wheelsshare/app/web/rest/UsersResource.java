@@ -72,7 +72,7 @@ public class UsersResource {
      * or with status {@code 500 (Internal Server Error)} if the users couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/users")
+    @PutMapping("/signUp")
     public ResponseEntity<Users> updateUsers(@Valid @RequestBody Users users) throws URISyntaxException {
         log.debug("REST request to update Users : {}", users);
         if (users.getEmailAddress() == null) {

@@ -39,7 +39,7 @@ public class QuestionsResourceIT {
     private static final String DEFAULT_QUESTION = "AAAAAAAAAA";
     private static final String UPDATED_QUESTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ANSWER = "AAAAAAAAAA";
+    private static final String DEFAULT_ANSWER = null;
     private static final String UPDATED_ANSWER = "BBBBBBBBBB";
 
     @Autowired
@@ -114,7 +114,7 @@ public class QuestionsResourceIT {
         int databaseSizeBeforeCreate = questionsRepository.findAll().size();
 
         // Create the Questions
-        restQuestionsMockMvc.perform(post("/api/questions")
+        restQuestionsMockMvc.perform(post("/api/questions/add")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(questions)))
             .andExpect(status().isCreated());
@@ -137,7 +137,7 @@ public class QuestionsResourceIT {
         questions.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restQuestionsMockMvc.perform(post("/api/questions")
+        restQuestionsMockMvc.perform(post("/api/questions/add")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(questions)))
             .andExpect(status().isBadRequest());
@@ -160,10 +160,39 @@ public class QuestionsResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(questions.getId().intValue())))
             .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
+            .andExpect(jsonPath("$.[*].question").value(hasItem(DEFAULT_QUESTION)));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPendingQuestions() throws Exception {
+        // Initialize the database
+        questionsRepository.saveAndFlush(questions);
+
+        // Get all the questionsList
+        restQuestionsMockMvc.perform(get("/api/pending-questions?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(questions.getId().intValue())))
+            .andExpect(jsonPath("$.[*].userEmailAddress").value(hasItem(DEFAULT_USER_EMAIL_ADDRESS)))
             .andExpect(jsonPath("$.[*].question").value(hasItem(DEFAULT_QUESTION)))
             .andExpect(jsonPath("$.[*].answer").value(hasItem(DEFAULT_ANSWER)));
     }
-    
+
+    @Test
+    @Transactional
+    public void getAllAnsweredQuestions() throws Exception {
+        // Initialize the database
+        questions.answer(UPDATED_ANSWER);
+        questionsRepository.saveAndFlush(questions);
+
+        // Get all the questionsList
+        restQuestionsMockMvc.perform(get("/api/answered-questions"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].answer").value(hasItem(UPDATED_ANSWER)));
+    }
+
     @Test
     @Transactional
     public void getQuestions() throws Exception {
@@ -205,7 +234,7 @@ public class QuestionsResourceIT {
             .question(UPDATED_QUESTION)
             .answer(UPDATED_ANSWER);
 
-        restQuestionsMockMvc.perform(put("/api/questions")
+        restQuestionsMockMvc.perform(post("/api/questions/answer")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedQuestions)))
             .andExpect(status().isOk());
@@ -214,8 +243,6 @@ public class QuestionsResourceIT {
         List<Questions> questionsList = questionsRepository.findAll();
         assertThat(questionsList).hasSize(databaseSizeBeforeUpdate);
         Questions testQuestions = questionsList.get(questionsList.size() - 1);
-        assertThat(testQuestions.getUserEmailAddress()).isEqualTo(UPDATED_USER_EMAIL_ADDRESS);
-        assertThat(testQuestions.getQuestion()).isEqualTo(UPDATED_QUESTION);
         assertThat(testQuestions.getAnswer()).isEqualTo(UPDATED_ANSWER);
     }
 
@@ -227,7 +254,7 @@ public class QuestionsResourceIT {
         // Create the Questions
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restQuestionsMockMvc.perform(put("/api/questions")
+        restQuestionsMockMvc.perform(post("/api/questions/answer")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(questions)))
             .andExpect(status().isBadRequest());
