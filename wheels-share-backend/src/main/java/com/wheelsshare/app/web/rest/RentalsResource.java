@@ -16,8 +16,10 @@ import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link com.wheelsshare.app.domain.Rentals}.
@@ -32,7 +34,7 @@ public class RentalsResource {
 
     private static final String ENTITY_NAME = "wheelsShareAppRentals";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${wheels.share.app}")
     private String applicationName;
 
     private final RentalsRepository rentalsRepository;
@@ -109,8 +111,12 @@ public class RentalsResource {
     @GetMapping("/admin/ongoingRentals")
     public List<Rentals> getOngoingRentals() {
         log.debug("REST request to get all ongoing Rentals");
-        List<Rentals> ongoingRentals = rentalsRepository.findByOngoingOrderByIdAsc(true);
-        return ongoingRentals;
+        //List<Rentals> ongoingRentals = rentalsRepository.findByOngoingOrderByIdAsc(true);
+        return rentalsRepository.findAll()
+            .stream()
+            .filter(Rentals::isOngoing)
+            .sorted(Comparator.comparing(Rentals::getId))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -121,8 +127,13 @@ public class RentalsResource {
     @GetMapping("/currentRentals/{userEmailAddress}")
     public List<Rentals> getCurrentRentals(@PathVariable String userEmailAddress) {
         log.debug("REST request to get all current Rentals");
-        List<Rentals> currentRentals = rentalsRepository.findByUserEmailAddressAndOngoingOrderByIdAsc(userEmailAddress, true);
-        return currentRentals;
+        //List<Rentals> currentRentals = rentalsRepository.findByUserEmailAddressAndOngoingOrderByIdAsc(userEmailAddress, true);
+        return rentalsRepository.findAll()
+            .stream()
+            .filter(r -> r.getUserEmailAddress().equals(userEmailAddress))
+            .filter(Rentals::isOngoing)
+            .sorted(Comparator.comparing(Rentals::getId))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -133,7 +144,12 @@ public class RentalsResource {
     @GetMapping("/rentalsHistory/{userEmailAddress}")
     public List<Rentals> getRentalsHistory(@PathVariable String userEmailAddress) {
         log.debug("REST request to get rentals history for a specific user");
-        return rentalsRepository.findByUserEmailAddressOrderByIdAsc(userEmailAddress);
+        //return rentalsRepository.findByUserEmailAddressOrderByIdAsc(userEmailAddress);
+        return rentalsRepository.findAll()
+            .stream()
+            .filter(r -> r.getUserEmailAddress().equals(userEmailAddress))
+            .sorted(Comparator.comparing(Rentals::getId))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -175,7 +191,14 @@ public class RentalsResource {
         final LocalDate newStartDate = LocalDate.parse(startDate);
         final LocalDate newEndDate = LocalDate.parse(endDate);
 
-        List<Rentals> ongoingRentals = rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId);
+        //List<Rentals> ongoingRentals = rentalsRepository.findByOngoingAndCarIdOrderByIdAsc(true, carId);
+        List<Rentals> ongoingRentals = rentalsRepository.findAll()
+            .stream()
+            .filter(Rentals::isOngoing)
+            .filter(r -> r.getCarId().equals(carId))
+            .sorted(Comparator.comparing(Rentals::getId))
+            .collect(Collectors.toList());
+
         for(Rentals rental : ongoingRentals) {
             final String rentalPeriod = rental.getRentPeriod();
             final LocalDate ongoingRentalStartDate = LocalDate.parse(rentalPeriod.split("/")[0]);

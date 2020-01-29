@@ -38,7 +38,6 @@ public class Rentals implements Serializable {
     @Column(name = "ongoing", nullable = false)
     private Boolean ongoing;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }

@@ -36,7 +36,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     private static final String PATH_KEY = "path";
     private static final String VIOLATIONS_KEY = "violations";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${wheels.share.app}")
     private String applicationName;
 
     /**

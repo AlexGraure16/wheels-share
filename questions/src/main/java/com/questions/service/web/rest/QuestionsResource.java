@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link com.questions.service.domain.Questions}.
@@ -33,7 +36,7 @@ public class QuestionsResource {
 
     private static final String ENTITY_NAME = "questionsService";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${wheels.share.app}")
     private String applicationName;
 
     private final QuestionsRepository questionsRepository;
@@ -102,7 +105,12 @@ public class QuestionsResource {
     @GetMapping("/pending-questions")
     public List<Questions> getAllPendingQuestions() {
         log.debug("REST request to get all pending Questions");
-        return questionsRepository.findByAnswerIsNullOrderByIdAsc();
+        //return questionsRepository.findByAnswerIsNullOrderByIdAsc();
+        return questionsRepository.findAll()
+            .stream()
+            .filter(q -> Objects.isNull(q.getAnswer()))
+            .sorted(Comparator.comparing(Questions::getId))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -113,7 +121,12 @@ public class QuestionsResource {
     @GetMapping("/answered-questions")
     public List<Questions> getAnsweredQuestions() {
         log.debug("REST request to get all answered Questions");
-        return questionsRepository.findByAnswerIsNotNullOrderByIdAsc();
+        //return questionsRepository.findByAnswerIsNotNullOrderByIdAsc();
+        return questionsRepository.findAll()
+            .stream()
+            .filter(q -> !Objects.isNull(q.getAnswer()))
+            .sorted(Comparator.comparing(Questions::getId))
+            .collect(Collectors.toList());
     }
 
     /**

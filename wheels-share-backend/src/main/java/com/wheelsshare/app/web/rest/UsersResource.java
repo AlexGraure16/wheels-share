@@ -31,7 +31,7 @@ public class UsersResource {
 
     private static final String ENTITY_NAME = "wheelsShareAppUsers";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${wheels.share.app}")
     private String applicationName;
 
     private final UsersRepository usersRepository;

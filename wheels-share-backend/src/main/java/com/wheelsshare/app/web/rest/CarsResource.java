@@ -31,7 +31,7 @@ public class CarsResource {
 
     private static final String ENTITY_NAME = "wheelsShareAppCars";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${wheels.share.app}")
     private String applicationName;
 
     private final CarsRepository carsRepository;
@@ -83,7 +83,6 @@ public class CarsResource {
     /**
      * {@code GET  /cars} : get all the cars.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of cars in body.
      */
     @GetMapping("/cars")
